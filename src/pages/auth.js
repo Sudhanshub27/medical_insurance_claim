@@ -1,4 +1,60 @@
 import { icon } from '../components/icons.js';
+import { authStore } from '../authStore.js';
+
+window.handleLogin = function(e) {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  
+  // Simulate API call
+  const btn = e.target.querySelector('button[type="submit"]');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = 'Logging in...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    // Fake JWT & User
+    const fakeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock';
+    const fakeUser = { name: email.split('@')[0], email: email };
+    
+    authStore.login(fakeUser, fakeToken);
+    
+    const redirect = sessionStorage.getItem('redirectAfterLogin') || '/dashboard';
+    sessionStorage.removeItem('redirectAfterLogin');
+    location.hash = redirect;
+  }, 600);
+};
+
+window.handleSignup = function(e) {
+  e.preventDefault();
+  const name = document.getElementById('signup-name').value;
+  const email = document.getElementById('signup-email').value;
+  const pw = document.getElementById('signup-password').value;
+  const confirm = document.getElementById('signup-confirm').value;
+
+  if (pw !== confirm) {
+    alert('Passwords do not match!');
+    return;
+  }
+
+  // Simulate API call
+  const btn = e.target.querySelector('button[type="submit"]');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = 'Creating Account...';
+  btn.disabled = true;
+
+  setTimeout(() => {
+    // Fake JWT & User
+    const fakeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_signup';
+    const fakeUser = { name: name, email: email };
+    
+    authStore.login(fakeUser, fakeToken);
+    
+    alert('Account created successfully!');
+    const redirect = sessionStorage.getItem('redirectAfterLogin') || '/dashboard';
+    sessionStorage.removeItem('redirectAfterLogin');
+    location.hash = redirect;
+  }, 800);
+};
 
 export function authPage() {
   return `
@@ -16,7 +72,7 @@ export function authPage() {
 
       <!-- LOGIN -->
       <div class="tab-content active" id="login">
-        <form onsubmit="event.preventDefault();location.hash='/dashboard'">
+        <form onsubmit="window.handleLogin(event)">
           <div class="form-group">
             <label class="form-label" for="login-email">Email Address</label>
             <input class="form-input" type="email" id="login-email" placeholder="you@example.com" required />
@@ -48,7 +104,7 @@ export function authPage() {
 
       <!-- SIGNUP -->
       <div class="tab-content" id="signup">
-        <form onsubmit="event.preventDefault();alert('Account created! Please check your email to verify.');location.hash='/dashboard'">
+        <form onsubmit="window.handleSignup(event)">
           <div class="form-group">
             <label class="form-label" for="signup-name">Full Name</label>
             <input class="form-input" type="text" id="signup-name" placeholder="Enter your full name" required />
@@ -63,7 +119,7 @@ export function authPage() {
           </div>
           <div class="form-group">
             <label class="form-label" for="signup-password">Password</label>
-            <input class="form-input" type="password" id="signup-password" placeholder="Create a strong password" required />
+            <input class="form-input" type="password" id="signup-password" placeholder="Create a strong password" required pattern="(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" />
             <div class="pw-strength"><div class="pw-strength__bar" style="width:0"></div></div>
             <div class="form-hint">Use 8+ characters with uppercase, numbers, and symbols</div>
           </div>

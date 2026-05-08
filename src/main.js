@@ -13,10 +13,27 @@ import { faqPage } from './pages/faq.js';
 import { contactPage } from './pages/contact.js';
 import { legalPage } from './pages/legal.js';
 
+import { authStore } from './authStore.js';
+
 // Render persistent layout
+function updateHeaderUI() {
+  const headerContainer = document.getElementById('site-header');
+  if (headerContainer) {
+    headerContainer.outerHTML = renderHeader();
+    initHeader(); // Rebind events to new DOM elements
+  }
+}
+
 document.getElementById('site-header').outerHTML = renderHeader();
 document.getElementById('site-footer').outerHTML = renderFooter();
 initHeader();
+
+window.handleLogout = function() {
+  authStore.logout();
+  location.hash = '/';
+};
+
+document.addEventListener('authChanged', updateHeaderUI);
 
 // Initialize router
 const router = new Router({

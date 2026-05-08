@@ -1,3 +1,5 @@
+import { authStore } from './authStore.js';
+
 // Hash-based SPA Router
 export class Router {
   constructor(routes) {
@@ -9,6 +11,15 @@ export class Router {
 
   _onHashChange() {
     const hash = location.hash.slice(1) || '/';
+    
+    // Auth Guard
+    const protectedRoutes = ['/upload', '/schedule', '/dashboard'];
+    if (protectedRoutes.includes(hash) && !authStore.isAuthenticated()) {
+      sessionStorage.setItem('redirectAfterLogin', hash);
+      location.hash = '/auth';
+      return;
+    }
+
     const route = this.routes[hash] || this.routes['/404'] || this.routes['/'];
     const container = document.getElementById('page-content');
     if (container && route) {

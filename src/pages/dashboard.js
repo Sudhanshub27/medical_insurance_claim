@@ -1,12 +1,16 @@
 import { icon } from '../components/icons.js';
+import { authStore } from '../authStore.js';
 
 export function dashboardPage() {
+  const user = authStore.getUser() || { name: 'Guest', email: '' };
+  const initials = user.name.charAt(0).toUpperCase();
+
   return `
   <section style="padding-top:calc(var(--header-h) + 32px);padding-bottom:16px;background:var(--bg-lavender)">
     <div class="container">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
         <div>
-          <h2 style="margin-bottom:4px">Welcome back, Rajesh 👋</h2>
+          <h2 style="margin-bottom:4px">Welcome back, ${user.name.split(' ')[0]} 👋</h2>
           <p style="color:var(--text-muted)">Here's an overview of your insurance benefit journey.</p>
         </div>
         <a href="#/upload" class="btn btn--primary btn--sm">${icon('upload', 16)} Upload New Document</a>
@@ -99,10 +103,10 @@ export function dashboardPage() {
             <a href="#" style="font-size:.85rem;color:var(--primary);font-weight:500" onclick="event.preventDefault()">Edit</a>
           </div>
           <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#9B6FE8);color:#fff;font-size:1.4rem;font-weight:700;display:flex;align-items:center;justify-content:center">R</div>
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#9B6FE8);color:#fff;font-size:1.4rem;font-weight:700;display:flex;align-items:center;justify-content:center">${initials}</div>
             <div>
-              <div style="font-weight:700;color:var(--text-dark)">Rajesh Sharma</div>
-              <div style="font-size:.85rem;color:var(--text-muted)">rajesh.sharma@email.com</div>
+              <div style="font-weight:700;color:var(--text-dark)">${user.name}</div>
+              <div style="font-size:.85rem;color:var(--text-muted)">${user.email || 'user@example.com'}</div>
             </div>
           </div>
           <div style="font-size:.88rem;color:var(--text-body);display:flex;flex-direction:column;gap:6px">
