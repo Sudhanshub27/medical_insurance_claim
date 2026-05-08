@@ -10,18 +10,18 @@ export function uploadPage() {
     </div>
   </section>
 
-  <section class="section">
+  <section class="section" style="padding-top:32px;padding-bottom:48px">
     <div class="container" style="max-width:800px">
       <!-- TRUST BADGES -->
-      <div class="trust-badges mb-5 reveal">
+      <div class="trust-badges mb-3 reveal">
         <div class="trust-badge">${icon('lock', 16)} 256-bit Encryption</div>
         <div class="trust-badge">${icon('shield', 16)} GDPR Compliant</div>
         <div class="trust-badge">${icon('eye', 16)} Privacy Protected</div>
         <div class="trust-badge">${icon('check', 16)} No Third-Party Sharing</div>
       </div>
 
-      <div class="card reveal" style="padding:40px">
-        <h3 class="mb-4" style="text-align:center">Document Upload Form</h3>
+      <div class="card reveal" style="padding:28px 32px">
+        <h3 class="mb-3" style="text-align:center">Document Upload Form</h3>
 
         <form id="upload-form" onsubmit="event.preventDefault();alert('Thank you! Your documents have been received. Our team will review them within 3-5 business days.')">
           <div class="form-row">
@@ -82,7 +82,7 @@ export function uploadPage() {
           <div class="form-group">
             <label class="form-label">Upload Documents *</label>
             <div class="dropzone" id="doc-dropzone">
-              <div class="dropzone__icon">${icon('upload', 48)}</div>
+              <div class="dropzone__icon">${icon('upload', 36)}</div>
               <div class="dropzone__text">Drag & drop your files here</div>
               <div class="dropzone__hint">or click to browse • PDF, JPG, PNG up to 10MB each</div>
               <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none" />
