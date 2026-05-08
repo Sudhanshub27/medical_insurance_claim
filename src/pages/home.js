@@ -36,7 +36,7 @@ export function homePage() {
       <div class="grid grid-4">
         ${[
           { icon: 'helpCircle', color: '', title: 'Confusing Policies', text: 'Complex jargon, exclusions, and fine print make it nearly impossible to understand what you\'re covered for.' },
-          { icon: 'dollar', color: 'gold', title: 'Missed Reimbursements', text: 'Thousands of rupees in eligible claims go uncollected every year because people don\'t know what to file.' },
+          { icon: 'dollar', color: 'gold', title: 'Unclaimed Benefits', text: 'Thousands of rupees in eligible claims go uncollected every year because people don\'t know what to file.' },
           { icon: 'doc', color: 'pink', title: 'Rejected Claims', text: 'Incorrect documentation or missed deadlines lead to claim rejections that could have been avoided.' },
           { icon: 'eye', color: 'teal', title: 'No Clarity on Process', text: 'Most people don\'t know the right steps, required documents, or timelines for filing claims.' },
         ].map((c, i) => `
