@@ -28,7 +28,7 @@ export function homePage() {
   </section>
 
   <!-- PROBLEM SECTION -->
-  <section class="section section--cream">
+  <section class="section">
     <div class="container text-center">
       <p class="section-label reveal">The Problem</p>
       <h2 class="mb-3 reveal">Insurance Shouldn't Be This Confusing</h2>
@@ -51,7 +51,7 @@ export function homePage() {
   </section>
 
   <!-- HOW IT WORKS -->
-  <section class="section">
+  <section class="section section--cream">
     <div class="container text-center">
       <p class="section-label reveal">Simple 4-Step Process</p>
       <h2 class="mb-3 reveal">How ClaimSure Works</h2>
@@ -76,7 +76,7 @@ export function homePage() {
   </section>
 
   <!-- SERVICE OPTIONS -->
-  <section class="section section--lavender">
+  <section class="section">
     <div class="container text-center">
       <p class="section-label reveal">Choose Your Way</p>
       <h2 class="mb-3 reveal">Two Simple Ways to Get Started</h2>
@@ -121,7 +121,7 @@ export function homePage() {
   </section>
 
   <!-- WHY CHOOSE US -->
-  <section class="section">
+  <section class="section section--cream">
     <div class="container text-center">
       <p class="section-label reveal">Why ClaimSure?</p>
       <h2 class="mb-3 reveal">Built on Trust, Powered by Humans</h2>
@@ -146,7 +146,7 @@ export function homePage() {
   </section>
 
   <!-- TESTIMONIALS -->
-  <section class="section section--cream">
+  <section class="section">
     <div class="container text-center">
       <p class="section-label reveal">Real Stories</p>
       <h2 class="mb-3 reveal">Families Who Recovered Their Benefits</h2>
