@@ -12,8 +12,8 @@ export class Router {
   _onHashChange() {
     const hash = location.hash.slice(1) || '/';
     
-    // Auth Guard
-    const protectedRoutes = ['/upload', '/schedule', '/dashboard'];
+    // Auth Guard (Only dashboard is protected for now)
+    const protectedRoutes = ['/dashboard'];
     if (protectedRoutes.includes(hash) && !authStore.isAuthenticated()) {
       sessionStorage.setItem('redirectAfterLogin', hash);
       location.hash = '/auth';
