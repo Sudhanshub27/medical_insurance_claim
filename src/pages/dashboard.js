@@ -1,5 +1,6 @@
 import { icon } from '../components/icons.js';
 import { authStore } from '../authStore.js';
+import { showToast } from '../components/toast.js';
 
 window.toggleProfileEdit = function(e) {
   e?.preventDefault();
@@ -37,17 +38,18 @@ window.saveProfileEdit = async function(e) {
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.error || 'Failed to update profile.');
+      showToast(data.error || 'Failed to update profile.', 'error');
       btn.innerHTML = originalText;
       btn.disabled = false;
       return;
     }
     
     // Update store and refresh UI
+    showToast('Profile updated successfully!', 'success');
     authStore.updateUser(data.user, data.token);
-    window.location.reload(); // Simple way to refresh the dashboard component
+    setTimeout(() => window.location.reload(), 1000); // Small delay to let toast show
   } catch (error) {
-    alert('Network error. Ensure the backend server is running.');
+    showToast('Network error. Ensure the backend server is running.', 'error');
     btn.innerHTML = originalText;
     btn.disabled = false;
   }
