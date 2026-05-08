@@ -1,59 +1,86 @@
 import { icon } from '../components/icons.js';
 import { authStore } from '../authStore.js';
 
-window.handleLogin = function(e) {
+window.handleLogin = async function(e) {
   e.preventDefault();
   const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
   
-  // Simulate API call
   const btn = e.target.querySelector('button[type="submit"]');
   const originalText = btn.innerHTML;
   btn.innerHTML = 'Logging in...';
   btn.disabled = true;
 
-  setTimeout(() => {
-    // Fake JWT & User
-    const fakeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock';
-    const fakeUser = { name: email.split('@')[0], email: email };
+  try {
+    const res = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || 'Login failed.');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      return;
+    }
     
-    authStore.login(fakeUser, fakeToken);
+    authStore.login(data.user, data.token);
     
     const redirect = sessionStorage.getItem('redirectAfterLogin') || '/dashboard';
     sessionStorage.removeItem('redirectAfterLogin');
     location.hash = redirect;
-  }, 600);
+  } catch (error) {
+    alert('Network error. Ensure the backend server is running.');
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
 };
 
-window.handleSignup = function(e) {
+window.handleSignup = async function(e) {
   e.preventDefault();
   const name = document.getElementById('signup-name').value;
   const email = document.getElementById('signup-email').value;
-  const pw = document.getElementById('signup-password').value;
+  const password = document.getElementById('signup-password').value;
   const confirm = document.getElementById('signup-confirm').value;
 
-  if (pw !== confirm) {
+  if (password !== confirm) {
     alert('Passwords do not match!');
     return;
   }
 
-  // Simulate API call
   const btn = e.target.querySelector('button[type="submit"]');
   const originalText = btn.innerHTML;
   btn.innerHTML = 'Creating Account...';
   btn.disabled = true;
 
-  setTimeout(() => {
-    // Fake JWT & User
-    const fakeToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock_signup';
-    const fakeUser = { name: name, email: email };
+  try {
+    const res = await fetch('http://localhost:5000/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || 'Signup failed.');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      return;
+    }
     
-    authStore.login(fakeUser, fakeToken);
+    authStore.login(data.user, data.token);
     
     alert('Account created successfully!');
     const redirect = sessionStorage.getItem('redirectAfterLogin') || '/dashboard';
     sessionStorage.removeItem('redirectAfterLogin');
     location.hash = redirect;
-  }, 800);
+  } catch (error) {
+    alert('Network error. Ensure the backend server is running.');
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
 };
 
 export function authPage() {
