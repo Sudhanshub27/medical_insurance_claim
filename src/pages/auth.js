@@ -72,9 +72,9 @@ export function authPage() {
             <input class="form-input" type="password" id="signup-confirm" placeholder="Confirm your password" required />
           </div>
           <div style="margin-bottom:24px">
-            <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:.85rem">
-              <input type="checkbox" required style="accent-color:var(--primary);margin-top:3px" />
-              I agree to the <a href="#/legal" style="color:var(--primary);font-weight:500">Terms & Conditions</a> and <a href="#/legal" style="color:var(--primary);font-weight:500">Privacy Policy</a>
+            <label style="display:inline-flex;align-items:baseline;gap:8px;cursor:pointer;font-size:.85rem;line-height:1.5">
+              <input type="checkbox" required style="accent-color:var(--primary);flex-shrink:0;width:16px;height:16px;margin-top:1px" />
+              <span>I agree to the <a href="#/legal" style="color:var(--primary);font-weight:600">Terms &amp; Conditions</a> and <a href="#/legal" style="color:var(--primary);font-weight:600">Privacy Policy</a></span>
             </label>
           </div>
           <button type="submit" class="btn btn--primary" style="width:100%">Create Account</button>
