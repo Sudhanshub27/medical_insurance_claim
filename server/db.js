@@ -15,12 +15,15 @@ const db = new sqlite3.Database(dbPath, (err) => {
 });
 
 db.serialize(() => {
+  db.run('DROP TABLE IF EXISTS users');
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL
+      password TEXT NOT NULL,
+      phone TEXT DEFAULT '+91 00000 00000',
+      location TEXT DEFAULT 'Not Specified'
     )
   `);
 });

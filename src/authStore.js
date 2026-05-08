@@ -7,6 +7,12 @@ export const authStore = {
     document.dispatchEvent(new CustomEvent('authChanged'));
   },
 
+  updateUser(user, token) {
+    if (token) localStorage.setItem('jwt', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    document.dispatchEvent(new CustomEvent('authChanged'));
+  },
+
   logout() {
     localStorage.removeItem('jwt');
     localStorage.removeItem('user');

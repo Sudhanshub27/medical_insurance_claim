@@ -1,6 +1,58 @@
 import { icon } from '../components/icons.js';
 import { authStore } from '../authStore.js';
 
+window.toggleProfileEdit = function(e) {
+  e?.preventDefault();
+  document.getElementById('profile-view').style.display = 'none';
+  document.getElementById('profile-edit').style.display = 'block';
+};
+
+window.cancelProfileEdit = function(e) {
+  e?.preventDefault();
+  document.getElementById('profile-edit').style.display = 'none';
+  document.getElementById('profile-view').style.display = 'block';
+};
+
+window.saveProfileEdit = async function(e) {
+  e?.preventDefault();
+  const name = document.getElementById('edit-profile-name').value;
+  const phone = document.getElementById('edit-profile-phone').value;
+  const locationStr = document.getElementById('edit-profile-location').value;
+  const btn = document.getElementById('save-profile-btn');
+  
+  const originalText = btn.innerHTML;
+  btn.innerHTML = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    const token = localStorage.getItem('jwt');
+    const res = await fetch('http://localhost:5000/api/user/profile', {
+      method: 'PUT',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ name, phone, location: locationStr })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.error || 'Failed to update profile.');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      return;
+    }
+    
+    // Update store and refresh UI
+    authStore.updateUser(data.user, data.token);
+    window.location.reload(); // Simple way to refresh the dashboard component
+  } catch (error) {
+    alert('Network error. Ensure the backend server is running.');
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }
+};
+
 export function dashboardPage() {
   const user = authStore.getUser() || { name: 'Guest', email: '' };
   const initials = user.name.charAt(0).toUpperCase();
@@ -97,23 +149,53 @@ export function dashboardPage() {
         </div>
 
         <!-- PROFILE -->
-        <div class="dash-card reveal reveal-delay-2">
-          <div class="dash-card__header">
-            <div class="dash-card__title">${icon('users', 18)} Profile</div>
-            <a href="#" style="font-size:.85rem;color:var(--primary);font-weight:500" onclick="event.preventDefault()">Edit</a>
-          </div>
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
-            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#9B6FE8);color:#fff;font-size:1.4rem;font-weight:700;display:flex;align-items:center;justify-content:center">${initials}</div>
-            <div>
-              <div style="font-weight:700;color:var(--text-dark)">${user.name}</div>
-              <div style="font-size:.85rem;color:var(--text-muted)">${user.email || 'user@example.com'}</div>
+        <div class="dash-card reveal reveal-delay-2" style="position:relative">
+          
+          <!-- View Mode -->
+          <div id="profile-view">
+            <div class="dash-card__header">
+              <div class="dash-card__title">${icon('users', 18)} Profile</div>
+              <a href="#" style="font-size:.85rem;color:var(--primary);font-weight:500" onclick="window.toggleProfileEdit(event)">Edit</a>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+              <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#9B6FE8);color:#fff;font-size:1.4rem;font-weight:700;display:flex;align-items:center;justify-content:center">${initials}</div>
+              <div>
+                <div style="font-weight:700;color:var(--text-dark);font-size:1.1rem">${user.name}</div>
+                <div style="font-size:.85rem;color:var(--text-muted)">${user.email || 'user@example.com'}</div>
+              </div>
+            </div>
+            <div style="font-size:.88rem;color:var(--text-body);display:flex;flex-direction:column;gap:10px;background:var(--bg-lavender);padding:16px;border-radius:var(--radius-sm)">
+              <div style="display:flex;align-items:center;gap:8px">${icon('phone', 16)} <strong>${user.phone || '+91 00000 00000'}</strong></div>
+              <div style="display:flex;align-items:center;gap:8px">${icon('map', 16)} <strong>${user.location || 'Not Specified'}</strong></div>
+              <div style="display:flex;align-items:center;gap:8px;color:var(--text-muted)">${icon('shield', 16)} Member since 2026</div>
             </div>
           </div>
-          <div style="font-size:.88rem;color:var(--text-body);display:flex;flex-direction:column;gap:6px">
-            <div>${icon('phone', 14)} +91 98765 43210</div>
-            <div>${icon('map', 14)} Mumbai, Maharashtra</div>
-            <div>${icon('shield', 14)} Member since April 2026</div>
+
+          <!-- Edit Mode -->
+          <div id="profile-edit" style="display:none">
+            <div class="dash-card__header">
+              <div class="dash-card__title">${icon('users', 18)} Edit Profile</div>
+            </div>
+            <form onsubmit="window.saveProfileEdit(event)" style="display:flex;flex-direction:column;gap:12px">
+              <div>
+                <label style="display:block;font-size:.85rem;margin-bottom:4px;font-weight:500;color:var(--text-dark)">Full Name</label>
+                <input type="text" id="edit-profile-name" value="${user.name}" class="form-input" style="padding:8px" required />
+              </div>
+              <div>
+                <label style="display:block;font-size:.85rem;margin-bottom:4px;font-weight:500;color:var(--text-dark)">Phone Number</label>
+                <input type="text" id="edit-profile-phone" value="${user.phone || ''}" class="form-input" style="padding:8px" placeholder="+91 98765 43210" />
+              </div>
+              <div>
+                <label style="display:block;font-size:.85rem;margin-bottom:4px;font-weight:500;color:var(--text-dark)">Location / City</label>
+                <input type="text" id="edit-profile-location" value="${user.location || ''}" class="form-input" style="padding:8px" placeholder="Mumbai, Maharashtra" />
+              </div>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button type="submit" id="save-profile-btn" class="btn btn--primary btn--sm" style="flex:1">Save Changes</button>
+                <button type="button" class="btn btn--outline btn--sm" style="flex:1" onclick="window.cancelProfileEdit(event)">Cancel</button>
+              </div>
+            </form>
           </div>
+
         </div>
       </div>
 
