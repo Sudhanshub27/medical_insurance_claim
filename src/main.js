@@ -9,6 +9,8 @@ import { uploadPage } from './pages/upload.js';
 import { schedulePage } from './pages/schedule.js';
 import { authPage } from './pages/auth.js';
 import { dashboardPage } from './pages/dashboard.js';
+import { myClaimsPage } from './pages/my-claims.js';
+import { messagesPage } from './pages/messages.js';
 import { faqPage } from './pages/faq.js';
 import { contactPage } from './pages/contact.js';
 import { legalPage } from './pages/legal.js';
@@ -44,6 +46,8 @@ const router = new Router({
   '/schedule': schedulePage,
   '/auth': authPage,
   '/dashboard': dashboardPage,
+  '/my-claims': myClaimsPage,
+  '/messages': messagesPage,
   '/faq': faqPage,
   '/contact': contactPage,
   '/legal': legalPage,
@@ -56,6 +60,19 @@ document.addEventListener('routeChanged', () => {
   initDropzone();
   initPasswordStrength();
   initMobileMenuClose();
+});
+
+// Global click listener for dropdowns
+document.addEventListener('click', (e) => {
+  const dashWrapper = document.getElementById('dash-profile-dropdown-wrapper');
+  const dashDropdown = document.getElementById('dash-profile-dropdown');
+  if (dashWrapper && dashDropdown) {
+    if (dashWrapper.contains(e.target)) {
+      dashDropdown.classList.toggle('show');
+    } else {
+      dashDropdown.classList.remove('show');
+    }
+  }
 });
 
 function initAccordions() {

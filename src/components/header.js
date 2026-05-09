@@ -18,19 +18,19 @@ export function renderHeader() {
   const initials = user ? user.name.charAt(0).toUpperCase() : 'U';
 
   const authHtml = isAuth ? `
-    <div style="display:flex;align-items:center;gap:12px">
-      <a href="#/dashboard" class="btn btn--outline btn--sm" style="padding:6px 12px">Dashboard</a>
-      <div style="position:relative;cursor:pointer" onclick="document.getElementById('profile-dropdown').classList.toggle('show')">
-        <div style="width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700">
+    <div style="display:flex;align-items:center;gap:16px">
+      <a href="#/dashboard" class="btn btn--outline btn--sm header__dash-btn" style="padding:6px 16px">Dashboard</a>
+      <div id="profile-dropdown-wrapper" style="position:relative;cursor:pointer">
+        <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#9B6FE8);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;box-shadow:0 2px 8px rgba(108,63,197,0.2)">
           ${initials}
         </div>
-        <div id="profile-dropdown" style="display:none;position:absolute;top:48px;right:0;background:#fff;border-radius:var(--radius-sm);box-shadow:var(--shadow-lg);border:1px solid var(--border);padding:8px 0;min-width:180px;z-index:100">
-          <div style="padding:8px 16px;border-bottom:1px solid var(--border);margin-bottom:8px">
-            <div style="font-weight:600;font-size:.9rem">${user?.name || 'User'}</div>
-            <div style="font-size:.8rem;color:var(--text-muted);word-break:break-all">${user?.email || ''}</div>
+        <div id="profile-dropdown" class="profile-dropdown">
+          <div class="profile-dropdown__header">
+            <div class="profile-dropdown__name">${user?.name || 'User'}</div>
+            <div class="profile-dropdown__email">${user?.email || ''}</div>
           </div>
-          <a href="#/dashboard" style="display:block;padding:8px 16px;color:var(--text-body);font-size:.9rem;text-decoration:none">My Profile</a>
-          <a href="#" onclick="event.preventDefault();window.handleLogout()" style="display:block;padding:8px 16px;color:var(--accent-pink);font-size:.9rem;text-decoration:none">Logout</a>
+          <a href="#/dashboard" class="profile-dropdown__item">My Profile</a>
+          <a href="#" onclick="event.preventDefault();window.handleLogout()" class="profile-dropdown__item profile-dropdown__item--danger">Logout</a>
         </div>
       </div>
     </div>
@@ -68,7 +68,63 @@ export function renderHeader() {
     </nav>
   </header>
   <style>
-    #profile-dropdown.show { display: block !important; }
+    .profile-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      background: #fff;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+      padding: 8px 0;
+      min-width: 220px;
+      z-index: 100;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.2s ease;
+    }
+    .profile-dropdown.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .profile-dropdown__header {
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .profile-dropdown__name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+    .profile-dropdown__email {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      word-break: break-all;
+      margin-top: 2px;
+    }
+    .profile-dropdown__item {
+      display: block;
+      padding: 10px 20px;
+      color: var(--text-body);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .profile-dropdown__item:hover {
+      background: var(--bg-lavender);
+      color: var(--primary);
+    }
+    .profile-dropdown__item--danger {
+      color: var(--accent-pink);
+    }
+    .profile-dropdown__item--danger:hover {
+      background: #FFF0F5;
+      color: #D6336C;
+    }
   </style>`;
 }
 
@@ -82,4 +138,23 @@ export function initHeader() {
   document.getElementById('hamburger-btn')?.addEventListener('click', () => {
     document.getElementById('mobile-nav')?.classList.toggle('open');
   });
+
+  // Profile Dropdown
+  const profileWrapper = document.getElementById('profile-dropdown-wrapper');
+  const profileDropdown = document.getElementById('profile-dropdown');
+  
+  if (profileWrapper && profileDropdown) {
+    // Toggle on click
+    profileWrapper.addEventListener('click', (e) => {
+      e.stopPropagation(); // prevent document click from closing it immediately
+      profileDropdown.classList.toggle('show');
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!profileWrapper.contains(e.target)) {
+        profileDropdown.classList.remove('show');
+      }
+    });
+  }
 }

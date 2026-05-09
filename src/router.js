@@ -20,6 +20,14 @@ export class Router {
       return;
     }
 
+    // Toggle main site header/footer based on route
+    const appRoutes = ['/dashboard', '/my-claims', '/messages'];
+    const isAppRoute = appRoutes.some(r => hash === r);
+    const headerEl = document.getElementById('site-header');
+    const footerEl = document.getElementById('site-footer');
+    if (headerEl) headerEl.style.display = isAppRoute ? 'none' : 'block';
+    if (footerEl) footerEl.style.display = isAppRoute ? 'none' : 'block';
+
     const route = this.routes[hash] || this.routes['/404'] || this.routes['/'];
     const container = document.getElementById('page-content');
     if (container && route) {
