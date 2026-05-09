@@ -4,13 +4,16 @@ export function homePage() {
   return `
   <!-- HERO -->
   <section class="hero">
+    <div class="hero__blob hero__blob--1"></div>
+    <div class="hero__blob hero__blob--2"></div>
+    <div class="hero__blob hero__blob--3"></div>
     <div class="container">
       <div class="hero__inner">
         <div class="hero__content">
-          <div class="hero__tag">${icon('shield', 16)} Trusted by 10,000+ Families</div>
-          <h1>Unlock the <span>Full Value</span> of Your Insurance</h1>
-          <p class="hero__subtitle">Your insurance already covers benefits you may not know about. We help you discover, understand, and claim what's rightfully yours — with real human support, every step of the way.</p>
-          <div class="hero__ctas">
+          <div class="hero__tag float-anim">${icon('shield', 16)} Trusted by 10,000+ Families</div>
+          <h1 class="reveal">Unlock the <span class="text-gradient-primary">Full Value</span> of Your Insurance</h1>
+          <p class="hero__subtitle reveal reveal-delay-1">Your insurance already covers benefits you may not know about. We help you discover, understand, and claim what's rightfully yours — with real human support, every step of the way.</p>
+          <div class="hero__ctas reveal reveal-delay-2">
             <a href="#/upload" class="btn btn--primary btn--lg">${icon('upload', 18)} Upload Documents</a>
             <a href="#/schedule" class="btn btn--gold btn--lg">${icon('home', 18)} Schedule Home Visit</a>
           </div>
@@ -20,12 +23,33 @@ export function homePage() {
             <div class="trust-badge">${icon('check', 16)} No Hidden Charges</div>
           </div>
         </div>
-        <div class="hero__image">
+        <div class="hero__image reveal reveal-delay-3">
           <img src="/hero-illustration.png" alt="Happy family receiving insurance assistance" loading="eager" />
+          <div class="glass-card hero-floating-card float-anim" style="animation-delay: 1s;">
+            <div class="hero-floating-card__icon">${icon('check', 24)}</div>
+            <div>
+              <div class="hero-floating-card__text">Claim Approved</div>
+              <div class="hero-floating-card__amount">₹45,000</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- PARTNERS MARQUEE -->
+  <div class="marquee-container reveal">
+    <div class="marquee">
+      <!-- Duplicate items for seamless scroll -->
+      ${Array(3).fill(`
+        <div class="partner-logo">${icon('shield', 28)} HDFC ERGO</div>
+        <div class="partner-logo">${icon('heart', 28)} Star Health</div>
+        <div class="partner-logo">${icon('check', 28)} ICICI Lombard</div>
+        <div class="partner-logo">${icon('users', 28)} Max Bupa</div>
+        <div class="partner-logo">${icon('doc', 28)} Care Insurance</div>
+      `).join('')}
+    </div>
+  </div>
 
   <!-- PROBLEM SECTION -->
   <section class="section">
@@ -145,6 +169,26 @@ export function homePage() {
     </div>
   </section>
 
+  <!-- STATS SECTION -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="grid grid-3">
+        <div class="stat-box reveal reveal-delay-1">
+          <div class="stat-number">₹50Cr+</div>
+          <div class="stat-label">Claims Recovered</div>
+        </div>
+        <div class="stat-box reveal reveal-delay-2">
+          <div class="stat-number">10,000+</div>
+          <div class="stat-label">Happy Families</div>
+        </div>
+        <div class="stat-box reveal reveal-delay-3">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- TESTIMONIALS -->
   <section class="section">
     <div class="container text-center">
@@ -153,15 +197,15 @@ export function homePage() {
       <p class="subtitle mx-auto mb-5 reveal">Join thousands of satisfied families who unlocked hidden value from their insurance.</p>
       <div class="grid grid-3">
         ${[
-          { name: 'Rajesh Sharma', role: 'Recovered ₹47,000 in health claims', initial: 'R', text: 'I had no idea my health insurance covered diagnostic tests. ClaimSure found benefits I was paying for but never using. The doorstep visit made it so easy for my mother.' },
-          { name: 'Priya Patel', role: 'Recovered ₹1,23,000 in maternity benefits', initial: 'P', text: 'After my pregnancy, I was confused about what documents to submit. The ClaimSure team walked me through everything and I received my full maternity benefit within 3 weeks.' },
-          { name: 'Suresh Iyer', role: 'Recovered ₹85,000 in policy benefits', initial: 'S', text: 'As a senior citizen, handling insurance paperwork felt impossible. ClaimSure sent someone to my home, collected everything, and handled the entire process. Truly remarkable service.' },
+          { name: 'Rajesh Sharma', role: 'Recovered ₹47,000 in health claims', avatar: '/avatars/rajesh.png', text: 'I had no idea my health insurance covered diagnostic tests. ClaimSure found benefits I was paying for but never using. The doorstep visit made it so easy for my mother.' },
+          { name: 'Priya Patel', role: 'Recovered ₹1,23,000 in maternity benefits', avatar: '/avatars/priya.png', text: 'After my pregnancy, I was confused about what documents to submit. The ClaimSure team walked me through everything and I received my full maternity benefit within 3 weeks.' },
+          { name: 'Suresh Iyer', role: 'Recovered ₹85,000 in policy benefits', avatar: '/avatars/suresh.png', text: 'As a senior citizen, handling insurance paperwork felt impossible. ClaimSure sent someone to my home, collected everything, and handled the entire process. Truly remarkable service.' },
         ].map((t, i) => `
           <div class="testimonial reveal reveal-delay-${i + 1}">
             <div class="testimonial__stars">${Array(5).fill(icon('star', 16)).join('')}</div>
             <div class="testimonial__text">"${t.text}"</div>
             <div class="testimonial__author">
-              <div class="testimonial__avatar">${t.initial}</div>
+              <div class="testimonial__avatar"><img src="${t.avatar}" alt="${t.name}"></div>
               <div>
                 <div class="testimonial__name">${t.name}</div>
                 <div class="testimonial__role">${t.role}</div>

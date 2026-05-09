@@ -110,6 +110,7 @@ export function servicesPage() {
           <div class="card__text">We review your policy at no charge and tell you what benefits you can recover.</div>
         </div>
         <div class="card card--highlight reveal reveal-delay-2 text-center">
+          <div class="popular-badge">Most Popular</div>
           <div style="font-size:2.5rem;margin-bottom:8px">💰</div>
           <div class="card__title">Claim Assistance</div>
           <div style="font-size:1.8rem;font-weight:700;color:var(--primary);margin:8px 0">Success Fee</div>
