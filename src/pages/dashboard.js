@@ -1,6 +1,7 @@
 import { icon } from '../components/icons.js';
 import { authStore } from '../authStore.js';
 import { showToast } from '../components/toast.js';
+import API_URL from '../config.js';
 
 window.toggleProfileEdit = function (e) {
   e?.preventDefault();
@@ -27,7 +28,7 @@ window.saveProfileEdit = async function (e) {
 
   try {
     const token = localStorage.getItem('jwt');
-    const res = await fetch('http://localhost:5000/api/user/profile', {
+    const res = await fetch(`${API_URL}/api/user/profile`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 import { icon } from '../components/icons.js';
 import { authStore } from '../authStore.js';
 import { showToast } from '../components/toast.js';
+import API_URL from '../config.js';
 
 window.handleLogin = async function(e) {
   e.preventDefault();
@@ -13,7 +14,7 @@ window.handleLogin = async function(e) {
   btn.disabled = true;
 
   try {
-    const res = await fetch('http://localhost:5000/api/auth/login', {
+    const res = await fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -58,7 +59,7 @@ window.handleSignup = async function(e) {
   btn.disabled = true;
 
   try {
-    const res = await fetch('http://localhost:5000/api/auth/signup', {
+    const res = await fetch(`${API_URL}/api/auth/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })

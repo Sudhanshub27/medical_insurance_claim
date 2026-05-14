@@ -5,10 +5,30 @@ import jwt from 'jsonwebtoken';
 import db from './db.js';
 
 const app = express();
-app.use(cors());
+
+// Allow all origins in development; restrict in production
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:4173',
+  /\.vercel\.app$/,       // all Vercel preview/production URLs
+  /\.onrender\.com$/,     // Render previews
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., curl, Postman)
+    if (!origin) return callback(null, true);
+    const allowed = allowedOrigins.some(o =>
+      typeof o === 'string' ? o === origin : o.test(origin)
+    );
+    callback(null, allowed);
+  },
+  credentials: true,
+}));
+
 app.use(express.json());
 
-const JWT_SECRET = 'super_secret_claimsure_key_123'; // In production, use environment variables
+const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_claimsure_key_123';
 
 // Middleware to verify JWT
 const verifyToken = (req, res, next) => {
@@ -30,12 +50,10 @@ app.post('/api/auth/signup', (req, res) => {
     return res.status(400).json({ error: 'All fields are required.' });
   }
 
-  // Check if user already exists
   db.get('SELECT id FROM users WHERE email = ?', [email], (err, row) => {
     if (err) return res.status(500).json({ error: 'Database error.' });
     if (row) return res.status(409).json({ error: 'Email already exists.' });
 
-    // Hash password and insert
     const hashedPassword = bcrypt.hashSync(password, 10);
     
     db.run(
@@ -67,11 +85,9 @@ app.post('/api/auth/login', (req, res) => {
     if (err) return res.status(500).json({ error: 'Database error.' });
     if (!user) return res.status(401).json({ error: 'Invalid email or password.' });
 
-    // Verify password
     const isValid = bcrypt.compareSync(password, user.password);
     if (!isValid) return res.status(401).json({ error: 'Invalid email or password.' });
 
-    // Generate JWT
     const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '24h' });
     
     res.status(200).json({
@@ -94,11 +110,9 @@ app.put('/api/user/profile', verifyToken, (req, res) => {
     function (err) {
       if (err) return res.status(500).json({ error: 'Failed to update profile.' });
 
-      // Fetch the updated user to get the email (needed for JWT)
       db.get('SELECT * FROM users WHERE id = ?', [req.userId], (err, user) => {
         if (err || !user) return res.status(500).json({ error: 'Database error after update.' });
 
-        // Generate a new JWT since the name might have changed
         const token = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '24h' });
         
         res.status(200).json({
@@ -111,7 +125,10 @@ app.put('/api/user/profile', verifyToken, (req, res) => {
   );
 });
 
-const PORT = 5000;
+// Health check
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
